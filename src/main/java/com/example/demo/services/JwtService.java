@@ -70,8 +70,13 @@ public class JwtService extends OncePerRequestFilter {
                             UserApp userApp = optUserApp.get();
 
                             if (validateToken(token, userApp)) {
+                                String role = claims.get("role", String.class);
+                                List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                                if (role != null) {
+                                    authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+                                }
                                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                                        userApp, null, null);
+                                        userApp, null, authorities);
                                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                             }
                         } catch (Exception e) {
@@ -101,6 +106,7 @@ public class JwtService extends OncePerRequestFilter {
     public static String generateToken(UserApp userApp) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", userApp.getUsername());
+        claims.put("role", userApp.getRole().name());
         return Jwts.builder().setClaims(claims).setSubject(userApp.getUsername()).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
                 .signWith(SignatureAlgorithm.HS256, SECRET).compact();

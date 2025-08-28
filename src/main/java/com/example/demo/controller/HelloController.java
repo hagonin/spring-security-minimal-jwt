@@ -18,4 +18,9 @@ public class HelloController {
     public ResponseEntity<String> getPrivate() {
         return ResponseEntity.ok("Hello getPrivate");
     }
+
+    @GetMapping("/private-admin")
+    public ResponseEntity<String> getPrivateAdmin() {
+        return ResponseEntity.ok("Hello Admin - private admin endpoint");
+    }
 }

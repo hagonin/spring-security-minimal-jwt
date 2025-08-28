@@ -19,10 +19,19 @@ public class UserApp {
     @Column(unique = true)
     private String username;
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
 
+    public UserApp(String username, String password, Role role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+    
     public UserApp(String username, String password) {
         this.username = username;
         this.password = password;
+        this.role = Role.USER;
     }
 }
