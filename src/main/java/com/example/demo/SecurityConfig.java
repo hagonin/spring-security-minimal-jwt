@@ -29,11 +29,14 @@ public class SecurityConfig {
                 .headers(headers -> headers
                         .frameOptions(frameOptionsConfig -> frameOptionsConfig.sameOrigin()))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/login", "/register").permitAll()
                         .requestMatchers("/hello/public").permitAll()
-                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/auth/login", "/auth/register", "/auth/status", "/auth/logout").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/auth/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/offers").permitAll()
+                .requestMatchers(HttpMethod.POST, "/offers").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/offers/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/add-offer").authenticated()
                         .requestMatchers("/hello/private-admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

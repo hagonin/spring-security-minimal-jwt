@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Register - Job Portal</title>
+		<style>
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.container {
+				background: white;
+				padding: 2.5rem;
+				border-radius: 15px;
+				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+				width: 100%;
+				max-width: 400px;
+			}
+
+			h2 {
+				text-align: center;
+				color: #2c3e50;
+				margin-bottom: 2rem;
+				font-size: 1.75rem;
+			}
+
+			.form-group {
+				margin-bottom: 1.5rem;
+			}
+
+			label {
+				display: block;
+				margin-bottom: 0.75rem;
+				color: #34495e;
+				font-weight: 600;
+				font-size: 0.95rem;
+			}
+
+			input[type='text'],
+			input[type='password'],
+			select {
+				width: 100%;
+				padding: 0.875rem;
+				border: 2px solid #e1e8ed;
+				border-radius: 8px;
+				font-size: 1rem;
+				transition: all 0.3s ease;
+				background: #f8f9fa;
+			}
+
+			input[type='text']:focus,
+			input[type='password']:focus,
+			select:focus {
+				outline: none;
+				border-color: #3498db;
+				background: white;
+				box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+			}
+
+			select {
+				background: #f8f9fa;
+				cursor: pointer;
+			}
+
+			.btn {
+				width: 100%;
+				padding: 1rem;
+				background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+				color: white;
+				border: none;
+				border-radius: 8px;
+				font-size: 1rem;
+				font-weight: 600;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				margin-top: 1rem;
+				margin-bottom: 1rem;
+			}
+
+			.btn:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+			}
+
+			.links {
+				text-align: center;
+				margin-top: 2rem;
+				padding-top: 2rem;
+				border-top: 1px solid #e1e8ed;
+			}
+
+			.links a {
+				color: #3498db;
+				text-decoration: none;
+				margin: 0 1rem;
+				font-weight: 500;
+				transition: color 0.3s ease;
+				display: inline-block;
+				padding: 0.5rem 1rem;
+				border-radius: 6px;
+				transition: all 0.3s ease;
+			}
+
+			.links a:hover {
+				color: #2980b9;
+				background-color: #f8f9fa;
+				text-decoration: none;
+			}
+
+			.error,
+			.success {
+				font-size: 0.875rem;
+				margin-top: 1rem;
+				display: none;
+				padding: 0.75rem;
+				border-radius: 6px;
+			}
+
+			.error {
+				color: #e74c3c;
+				background-color: #fdf2f2;
+				border: 1px solid #fecaca;
+			}
+
+			.success {
+				color: #2c3e50;
+				background-color: #e8f4fd;
+				border: 1px solid #b3d9ff;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h2>Register for Job Portal</h2>
+			<form id="registerForm">
+				<div class="form-group">
+					<label for="username">Username:</label>
+					<input
+						type="text"
+						id="username"
+						name="username"
+						required
+						minlength="3"
+					/>
+				</div>
+
+				<div class="form-group">
+					<label for="password">Password:</label>
+					<input
+						type="password"
+						id="password"
+						name="password"
+						required
+						minlength="6"
+					/>
+				</div>
+
+				<div class="form-group">
+					<label for="role">Role:</label>
+					<select id="role" name="role">
+						<option value="USER">User</option>
+						<option value="ADMIN">Admin</option>
+					</select>
+				</div>
+
+				<button type="submit" class="btn">Register</button>
+				<div id="error" class="error"></div>
+				<div id="success" class="success"></div>
+			</form>
+
+			<div class="links">
+				<a href="/login">Already have an account? Login</a>
+				<a href="/offers">Browse Jobs</a>
+			</div>
+		</div>
+
+		<script>
+			document
+				.getElementById('registerForm')
+				.addEventListener('submit', async function (e) {
+					e.preventDefault();
+
+					const username = document.getElementById('username').value;
+					const password = document.getElementById('password').value;
+					const role = document.getElementById('role').value;
+					const errorDiv = document.getElementById('error');
+					const successDiv = document.getElementById('success');
+
+					// Hide previous messages
+					errorDiv.style.display = 'none';
+					successDiv.style.display = 'none';
+
+					try {
+						const response = await fetch('/auth/register', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify({ username, password, role }),
+						});
+
+						if (response.ok) {
+							successDiv.textContent =
+								'Registration successful! You can now login.';
+							successDiv.style.display = 'block';
+							document.getElementById('registerForm').reset();
+							setTimeout(() => {
+								window.location.href = '/login';
+							}, 2000);
+						} else {
+							errorDiv.textContent =
+								'Registration failed. Username may already exist.';
+							errorDiv.style.display = 'block';
+						}
+					} catch (error) {
+						errorDiv.textContent = 'Registration failed. Please try again.';
+						errorDiv.style.display = 'block';
+					}
+				});
+		</script>
+	</body>
+</html>

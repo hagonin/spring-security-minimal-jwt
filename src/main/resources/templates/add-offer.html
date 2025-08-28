@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Add Job Offer - Job Portal</title>
+		<style>
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				background: #f8f9fa;
+				min-height: 100vh;
+			}
+
+			.navbar {
+				background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+				color: white;
+				padding: 1rem 2rem;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.navbar h1 {
+				font-size: 1.5rem;
+			}
+
+			.navbar a {
+				color: white;
+				text-decoration: none;
+				padding: 0.75rem 1.5rem;
+				border: 1px solid rgba(255, 255, 255, 0.3);
+				border-radius: 8px;
+				transition: all 0.3s ease;
+				font-weight: 500;
+			}
+
+			.navbar a:hover {
+				background-color: rgba(255, 255, 255, 0.15);
+				transform: translateY(-2px);
+			}
+
+			.container {
+				max-width: 600px;
+				margin: 2rem auto;
+				padding: 0 2rem;
+			}
+
+			.form-container {
+				background: white;
+				padding: 2.5rem;
+				border-radius: 15px;
+				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+			}
+
+			h2 {
+				color: #2c3e50;
+				margin-bottom: 2rem;
+				text-align: center;
+				font-size: 1.75rem;
+			}
+
+			.form-group {
+				margin-bottom: 2rem;
+			}
+
+			label {
+				display: block;
+				margin-bottom: 0.75rem;
+				color: #34495e;
+				font-weight: 600;
+				font-size: 0.95rem;
+			}
+
+			input[type='text'],
+			input[type='number'],
+			textarea {
+				width: 100%;
+				padding: 0.875rem;
+				border: 2px solid #e1e8ed;
+				border-radius: 8px;
+				font-size: 1rem;
+				transition: all 0.3s ease;
+				font-family: inherit;
+				background: #f8f9fa;
+			}
+
+			input[type='text']:focus,
+			input[type='number']:focus,
+			textarea:focus {
+				outline: none;
+				border-color: #3498db;
+				background: white;
+				box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+			}
+
+			textarea {
+				resize: vertical;
+				min-height: 120px;
+			}
+
+			.btn {
+				width: 100%;
+				padding: 0.875rem;
+				background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+				color: white;
+				border: none;
+				border-radius: 8px;
+				font-size: 1rem;
+				font-weight: 600;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				margin-top: 0.5rem;
+			}
+
+			.btn:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+			}
+
+			.btn:disabled {
+				opacity: 0.6;
+				cursor: not-allowed;
+				transform: none;
+				box-shadow: none;
+			}
+
+			.error,
+			.success {
+				font-size: 0.875rem;
+				margin-top: 1.5rem;
+				padding: 1rem;
+				border-radius: 8px;
+				display: none;
+			}
+
+			.error {
+				color: #e74c3c;
+				background-color: #fdf2f2;
+				border: 1px solid #fecaca;
+			}
+
+			.success {
+				color: #2c3e50;
+				background-color: #e8f4fd;
+				border: 1px solid #b3d9ff;
+			}
+
+			.auth-warning {
+				background: #fff3cd;
+				border: 1px solid #ffd60a;
+				color: #856404;
+				padding: 1.5rem;
+				border-radius: 8px;
+				margin-bottom: 2rem;
+				text-align: center;
+			}
+
+			.auth-warning a {
+				color: #3498db;
+				text-decoration: none;
+				font-weight: 500;
+			}
+
+			.auth-warning a:hover {
+				text-decoration: underline;
+			}
+
+			.required {
+				color: #e74c3c;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar">
+			<h1>Job Portal</h1>
+			<a href="/offers">Back to Jobs</a>
+		</nav>
+
+		<div class="container">
+			<div id="authWarning" class="auth-warning" style="display: none">
+				<p>
+					You need to be logged in to add job offers.
+					<a href="/login">Login here</a>
+				</p>
+			</div>
+
+			<div class="form-container">
+				<h2>Add New Job Offer</h2>
+				<form id="addOfferForm">
+					<div class="form-group">
+						<label for="title">Job Title <span class="required">*</span></label>
+						<input
+							type="text"
+							id="title"
+							name="title"
+							required
+							maxlength="100"
+							placeholder="e.g. Senior Java Developer"
+						/>
+					</div>
+
+					<div class="form-group">
+						<label for="company">Company <span class="required">*</span></label>
+						<input
+							type="text"
+							id="company"
+							name="company"
+							required
+							maxlength="100"
+							placeholder="e.g. Tech Corp Inc."
+						/>
+					</div>
+
+					<div class="form-group">
+						<label for="salary">Salary (USD)</label>
+						<input
+							type="number"
+							id="salary"
+							name="salary"
+							min="0"
+							max="999999"
+							step="1000"
+							placeholder="e.g. 75000"
+						/>
+					</div>
+
+					<div class="form-group">
+						<label for="description"
+							>Job Description <span class="required">*</span></label
+						>
+						<textarea
+							id="description"
+							name="description"
+							required
+							maxlength="1000"
+							placeholder="Describe the job responsibilities, requirements, and benefits..."
+						></textarea>
+					</div>
+
+					<button type="submit" class="btn" id="submitBtn">
+						Add Job Offer
+					</button>
+					<div id="error" class="error"></div>
+					<div id="success" class="success"></div>
+				</form>
+			</div>
+		</div>
+
+		<script>
+			let isLoggedIn = false;
+
+			// Check authentication status
+			async function checkAuthStatus() {
+				try {
+					const response = await fetch('/auth/status', {
+						method: 'GET',
+						credentials: 'include',
+					});
+
+					if (response.ok) {
+						isLoggedIn = true;
+						document.getElementById('authWarning').style.display = 'none';
+					} else {
+						isLoggedIn = false;
+						document.getElementById('authWarning').style.display = 'block';
+						document.getElementById('submitBtn').disabled = true;
+					}
+				} catch (error) {
+					isLoggedIn = false;
+					document.getElementById('authWarning').style.display = 'block';
+					document.getElementById('submitBtn').disabled = true;
+				}
+			}
+
+			document
+				.getElementById('addOfferForm')
+				.addEventListener('submit', async function (e) {
+					e.preventDefault();
+
+					if (!isLoggedIn) {
+						showError('You must be logged in to add job offers');
+						return;
+					}
+
+					const formData = new FormData(e.target);
+					const title = formData.get('title').trim();
+					const company = formData.get('company').trim();
+					const salary = formData.get('salary');
+					const description = formData.get('description').trim();
+
+					// Validation
+					if (!title || !company || !description) {
+						showError('Please fill in all required fields');
+						return;
+					}
+
+					if (title.length < 2) {
+						showError('Job title must be at least 2 characters long');
+						return;
+					}
+
+					if (company.length < 2) {
+						showError('Company name must be at least 2 characters long');
+						return;
+					}
+
+					if (description.length < 10) {
+						showError('Job description must be at least 10 characters long');
+						return;
+					}
+
+					const submitBtn = document.getElementById('submitBtn');
+					submitBtn.disabled = true;
+					submitBtn.textContent = 'Adding...';
+
+					try {
+						const offerData = {
+							title: title,
+							company: company,
+							description: description,
+						};
+
+						if (salary && salary > 0) {
+							offerData.salary = parseFloat(salary);
+						}
+
+						const response = await fetch('/offers', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify(offerData),
+							credentials: 'include',
+						});
+
+						if (response.ok) {
+							showSuccess('Job offer added successfully!');
+							document.getElementById('addOfferForm').reset();
+							setTimeout(() => {
+								window.location.href = '/offers';
+							}, 2000);
+						} else if (response.status === 403) {
+							showError(
+								'You are not authorized to add job offers. Please log in.'
+							);
+						} else {
+							const errorText = await response.text();
+							showError(errorText || 'Failed to add job offer');
+						}
+					} catch (error) {
+						console.error('Error:', error);
+						showError('Network error. Please try again.');
+					} finally {
+						submitBtn.disabled = false;
+						submitBtn.textContent = 'Add Job Offer';
+					}
+				});
+
+			function showError(message) {
+				const errorDiv = document.getElementById('error');
+				const successDiv = document.getElementById('success');
+
+				successDiv.style.display = 'none';
+				errorDiv.textContent = message;
+				errorDiv.style.display = 'block';
+
+				setTimeout(() => {
+					errorDiv.style.display = 'none';
+				}, 5000);
+			}
+
+			function showSuccess(message) {
+				const errorDiv = document.getElementById('error');
+				const successDiv = document.getElementById('success');
+
+				errorDiv.style.display = 'none';
+				successDiv.textContent = message;
+				successDiv.style.display = 'block';
+			}
+
+			// Initialize page
+			document.addEventListener('DOMContentLoaded', function () {
+				checkAuthStatus();
+			});
+		</script>
+	</body>
+</html>
