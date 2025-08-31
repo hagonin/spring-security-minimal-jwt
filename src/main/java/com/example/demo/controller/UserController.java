@@ -19,6 +19,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Optional;
 
+/**
+ * Controller for managing user authentication and registration.
+ * Handles login, registration, logout, and user status endpoints.
+ * Provides both HTML views for browsers and JSON responses for API calls.
+ */
 @Controller
 public class UserController {
 
@@ -32,16 +37,29 @@ public class UserController {
     @Value("${jwt.cookie_name}")
     private String cookieName;
 
+    /**
+     * Redirects the root path to the offers page
+     * @return redirect to /offers
+     */
     @GetMapping("/")
     public String index() {
         return "redirect:/offers";
     }
 
+    /**
+     * Displays the add offer page.
+     * @return the add-offer template
+     */
     @GetMapping("/add-offer")
     public String addOfferPage() {
         return "add-offer";
     }
 
+    /**
+     * Displays the login page for browser requests.
+     * @param request the HTTP servlet request
+     * @return ModelAndView for the login page
+     */
     @GetMapping("/login")
     public Object loginPage(HttpServletRequest request) {
         String acceptHeader = request.getHeader("Accept");
@@ -55,6 +73,11 @@ public class UserController {
         return new ModelAndView("redirect:/login");
     }
 
+    /**
+     * Displays the registration page for browser requests.
+     * @param request the HTTP servlet request
+     * @return ModelAndView for the registration page
+     */
     @GetMapping("/register") 
     public Object registerPage(HttpServletRequest request) {
         String acceptHeader = request.getHeader("Accept");
@@ -68,6 +91,12 @@ public class UserController {
         return new ModelAndView("redirect:/register");
     }
 
+    /**
+     * Authenticates a user and returns a JWT token in a cookie.
+     * @param userApp the user credentials
+     * @return ResponseEntity with authentication token cookie or error
+     * @throws Exception if authentication fails
+     */
     @PostMapping("/auth/login")
     @ResponseBody
     public ResponseEntity<?> login(@RequestBody UserApp userApp) throws Exception {
@@ -79,6 +108,12 @@ public class UserController {
         throw new Exception();
     }
 
+    /**
+     * Registers a new user with encoded password.
+     * Default role is USER if not specified.
+     * @param userApp the user registration data
+     * @throws Exception if username already exists
+     */
     @PostMapping("/auth/register")
     @ResponseBody
     public void register(@RequestBody UserApp userApp) throws Exception {
@@ -97,6 +132,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Logs out the user by expiring the authentication cookie.
+     * @param response the HTTP servlet response
+     * @return ResponseEntity with logout confirmation
+     */
     @PostMapping("/auth/logout")
     @ResponseBody
     public ResponseEntity<?> logout(HttpServletResponse response) {
@@ -111,6 +151,11 @@ public class UserController {
                 .body("Logged out successfully");
     }
 
+    /**
+     * Returns the current authentication status and user information.
+     * @param currentUser the authenticated user (null if not authenticated)
+     * @return ResponseEntity with user info or authentication error
+     */
     @GetMapping("/auth/status")
     @ResponseBody
     public ResponseEntity<?> getAuthStatus(@AuthenticationPrincipal UserApp currentUser) {

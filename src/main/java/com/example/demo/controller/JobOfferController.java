@@ -21,6 +21,12 @@ public class JobOfferController {
     @Autowired
     private JobOfferRepository jobOfferRepository;
 
+    /**
+     * Retrieves all job offers. Returns HTML view for browser requests
+     * and JSON for API calls.
+     * @param request the HTTP servlet request
+     * @return ModelAndView for HTML requests or ResponseEntity with job offers for JSON requests
+     */
     @GetMapping
     public Object getAllOffers(HttpServletRequest request) {
         String acceptHeader = request.getHeader("Accept");
@@ -34,7 +40,12 @@ public class JobOfferController {
         return ResponseEntity.ok(jobOfferRepository.findAll());
     }
 
-
+    /**
+     * Creates a new job offer for the authenticated user.
+     * @param jobOffer the job offer to create
+     * @param currentUser the authenticated user
+     * @return ResponseEntity with the created job offer
+     */
     @PostMapping
     @ResponseBody
     public ResponseEntity<JobOffer> createOffer(@RequestBody JobOffer jobOffer, @AuthenticationPrincipal UserApp currentUser) {
@@ -43,6 +54,13 @@ public class JobOfferController {
         return ResponseEntity.ok(savedOffer);
     }
 
+    /**
+     * Deletes a job offer by ID. Users can only delete their own job offers
+     * unless they have ADMIN role.
+     * @param id the ID of the job offer to delete
+     * @param currentUser the authenticated user
+     * @return ResponseEntity with success message or error status
+     */
     @DeleteMapping("/{id}")
     @ResponseBody
     public ResponseEntity<?> deleteOffer(@PathVariable Long id, @AuthenticationPrincipal UserApp currentUser) {
